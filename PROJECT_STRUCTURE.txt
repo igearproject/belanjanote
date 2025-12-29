@@ -1,0 +1,47 @@
+.
+├── API.md
+├── app.json
+├── App.tsx
+├── ARCHITECTURE.md
+├── assets
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   ├── icon.png
+│   └── splash-icon.png
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── implementation_plan.md
+├── index.ts
+├── LICENSE
+├── package.json
+├── package-lock.json
+├── PROJECT_STRUCTURE.txt
+├── QUICKSTART.md
+├── README.md
+├── src
+│   ├── components
+│   │   ├── Button.tsx
+│   │   ├── index.ts
+│   │   ├── Input.tsx
+│   │   └── ProductCard.tsx
+│   ├── database
+│   │   └── index.ts
+│   ├── navigation
+│   │   └── AppNavigator.tsx
+│   ├── screens
+│   │   ├── HistoryScreen.tsx
+│   │   ├── HomeScreen.tsx
+│   │   ├── index.ts
+│   │   ├── ProductsScreen.tsx
+│   │   └── SettingsScreen.tsx
+│   ├── store
+│   │   └── index.ts
+│   ├── types
+│   │   └── index.ts
+│   └── utils
+│       ├── index.ts
+│       └── sampleData.ts
+├── TECH_SPEC.md
+└── tsconfig.json
+
+10 directories, 35 files

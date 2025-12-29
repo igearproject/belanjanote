@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "BelanjaNote",
+    "slug": "belanjanote",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo_full.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logo_full.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo_full.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.igear.belanjanote"
+    },
+    "web": {
+      "favicon": "./assets/logo_full.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4666633b-1566-472a-8592-fb3c0c36e212"
+      }
+    },
+    "owner": "igear"
+  }
+}
