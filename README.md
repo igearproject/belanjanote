@@ -1,78 +1,107 @@
 # 🛒 Catatan Belanja Cerdas
 
-[![Expo Build Android](https://img.shields.io/badge/Platform-Android-green?logo=android&logoColor=white)](./releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Aplikasi mobile untuk mencatat belanja dan memprediksi kebutuhan berdasarkan pola konsumsi Anda.
 
-Aplikasi mobile cerdas untuk mencatat belanja, memantau persediaan barang, dan memprediksi kapan barang Anda akan habis berdasarkan pola konsumsi harian.
+## ✨ Fitur Utama
 
----
+- **📊 Prediksi Cerdas**: Aplikasi menghitung rata-rata durasi habisnya barang berdasarkan riwayat belanja
+- **🎯 Prioritas Belanja**: Barang diurutkan otomatis berdasarkan tingkat urgensi (Mendesak, Perlu Beli, Persiapan, Aman)
+- **📦 Manajemen Produk**: Tambah, edit, dan hapus produk dengan mudah
+- **📜 Riwayat Lengkap**: Lihat semua transaksi pembelian yang pernah dilakukan
+- **💾 Export/Import**: Backup data ke file JSON dan restore di perangkat lain
+- **📱 Offline First**: Semua data tersimpan lokal, tidak perlu koneksi internet
 
-## 📥 Download & Instal (Cepat)
-
-Ingin langsung mencoba? Tidak perlu ribet dengan script! Cukup ikuti langkah mudah ini:
-
-1. 📂 Buka folder [**releases**](./releases) di repository ini.
-2. 📥 Cari dan download file dengan ekstensi **.apk** (contoh: `application-xyz.apk`).
-3. 📱 Kirim file tersebut ke HP Android Anda.
-4. ⚙️ Izinkan "Install from unknown sources" di pengaturan HP jika muncul peringatan.
-5. 🚀 Instal dan mulai catat belanjamu!
-
----
-
-## ✨ Fitur Unggulan
-
-*   **📊 Prediksi Cerdas**: Menghitung otomatis kapan barang akan habis.
-*   **🎯 Prioritas Belanja**: Label warna (Merah/Oranye/Kuning/Hijau) untuk tingkat urgensi belanja.
-*   **📜 History Belanja**: Lacak semua pengeluaran dan tanggal pembelian sebelumnya.
-*   **💾 Backup & Restore**: Amankan datamu dengan fitur Export/Import JSON.
-*   **📱 Offline-First**: Data tersimpan aman di perangkatmu, tanpa perlu internet!
-
----
-
-## 📷 Cuplikan Urgensi Belanja
-
-*   🔴 **Mendesak**: Habis hari ini atau sudah habis.
-*   🟠 **Perlu Beli**: Habis dalam 3 hari ke depan.
-*   🟡 **Persiapan**: Habis dalam waktu kurang dari seminggu.
-*   🟢 **Aman**: Stok masih sangat mencukupi.
-
----
-
-## 🛠️ Untuk Developer (Cara Menjalankan)
-
-Jika Anda ingin memodifikasi atau berkontribusi, ikuti langkah berikut:
+## 🚀 Cara Menjalankan
 
 ### Prasyarat
-- [Node.js](https://nodejs.org/) (v18+)
-- [Expo Go](https://expo.dev/expo-go) terinstal di HP
+- Node.js (v18 atau lebih baru)
+- npm atau yarn
+- Expo Go app di smartphone (untuk testing)
 
-### Setup
+### Instalasi
+
+1. Clone repository ini
 ```bash
-# Clone repo
-git clone https://github.com/igearproject/belanjanote.git
 cd catatan_belanja
+```
 
-# Install dependencies
+2. Install dependencies
+```bash
 npm install
+```
 
-# Start development server
+3. Jalankan aplikasi
+```bash
 npm start
-``` 
-Scan QR Code yang muncul menggunakan aplikasi **Expo Go**.
+```
 
----
+4. Scan QR code dengan Expo Go app di smartphone Anda
+
+## 📱 Cara Menggunakan
+
+### 1. Tambah Produk
+- Buka tab **Produk**
+- Tap tombol **+ Tambah**
+- Isi nama produk, kategori, satuan, dan ukuran kemasan
+- Tap **Simpan**
+
+### 2. Catat Pembelian
+- Buka tab **Belanja**
+- Centang checkbox pada produk yang baru dibeli
+- Konfirmasi jumlah dan harga (opsional)
+- Tap **Simpan**
+
+### 3. Lihat Prediksi
+- Tab **Belanja** menampilkan produk yang diurutkan berdasarkan urgensi:
+  - 🔴 **Mendesak**: Habis dalam ≤ 1 hari
+  - 🟠 **Perlu Beli**: Habis dalam ≤ 3 hari
+  - 🟡 **Persiapan**: Habis dalam ≤ 7 hari
+  - 🟢 **Aman**: Masih lama habisnya
+
+### 4. Export/Import Data
+- Buka tab **Pengaturan**
+- Tap **Export Data** untuk backup
+- Tap **Import Data** untuk restore dari file JSON
 
 ## 🏗️ Teknologi
 
-*   **Framework**: [Expo](https://expo.dev/) (React Native)
-*   **Database**: SQLite via `expo-sqlite`
-*   **State**: [Zustand](https://github.com/pmndrs/zustand)
-*   **Styles**: Standard StyleSheet (Cross-platform ready)
+- **Framework**: Expo (React Native)
+- **Language**: TypeScript
+- **State Management**: Zustand
+- **Database**: expo-sqlite
+- **Navigation**: React Navigation
+- **Date Handling**: date-fns
+
+## 📂 Struktur Proyek
+
+```
+src/
+├── components/       # Komponen UI reusable
+├── screens/          # Screen utama aplikasi
+├── database/         # SQLite database layer
+├── store/            # Zustand state management
+├── types/            # TypeScript type definitions
+├── utils/            # Utility functions
+└── navigation/       # React Navigation setup
+```
+
+## 🎨 Algoritma Prediksi
+
+Aplikasi menggunakan algoritma sederhana namun efektif:
+
+1. **Hitung Interval**: Mencari jarak waktu antara pembelian berturut-turut
+2. **Rata-rata**: Menghitung rata-rata interval untuk mendapat durasi habis
+3. **Prediksi**: Menambahkan durasi ke tanggal pembelian terakhir
+4. **Prioritas**: Mengurutkan berdasarkan sisa hari hingga habis
+
+## 📄 Lisensi
+
+MIT License - Silakan gunakan dan modifikasi sesuai kebutuhan Anda.
+
+## 🤝 Kontribusi
+
+Kontribusi selalu diterima! Silakan buat issue atau pull request.
 
 ---
 
-## 🤝 Kontribusi & Dukungan
-
-Ada ide fitur baru? Temukan bug? Silakan buat **Issue** atau kirim **Pull Request**. Kami sangat terbuka untuk kolaborasi!
-
-Dibuat dengan ❤️ oleh **igearproject**
+Dibuat dengan ❤️ menggunakan Expo & React Native
