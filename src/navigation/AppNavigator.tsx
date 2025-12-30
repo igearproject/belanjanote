@@ -1,14 +1,107 @@
 import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, LinkingOptions, NavigatorScreenParams } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeScreen } from '../screens/HomeScreen';
-import { ProductsScreen } from '../screens/ProductsScreen';
-import { HistoryScreen } from '../screens/HistoryScreen';
-import { SettingsScreen } from '../screens/SettingsScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeScreen, ProductsScreen, HistoryScreen, SettingsScreen, PrivacyPolicyScreen } from '../screens';
 import { useStore } from '../store';
-import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text, Platform } from 'react-native';
 
-const Tab = createBottomTabNavigator();
+export type MainTabParamList = {
+    Home: undefined;
+    Products: undefined;
+    History: undefined;
+    Settings: undefined;
+};
+
+export type RootStackParamList = {
+    Main: NavigatorScreenParams<MainTabParamList>;
+    PrivacyPolicy: undefined;
+};
+
+const Tab = createBottomTabNavigator<MainTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const TabNavigator = () => {
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                headerShown: false,
+                tabBarActiveTintColor: '#3B82F6',
+                tabBarInactiveTintColor: '#9CA3AF',
+                tabBarStyle: {
+                    backgroundColor: '#FFFFFF',
+                    borderTopWidth: 1,
+                    borderTopColor: '#E5E7EB',
+                    paddingBottom: 8,
+                    paddingTop: 8,
+                    height: 60,
+                },
+                tabBarLabelStyle: {
+                    fontSize: 12,
+                    fontWeight: '600',
+                },
+            }}
+        >
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                    tabBarLabel: 'Belanja',
+                    tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+                        <Text style={{ fontSize: size, color }}>🛒</Text>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Products"
+                component={ProductsScreen}
+                options={{
+                    tabBarLabel: 'Produk',
+                    tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+                        <Text style={{ fontSize: size, color }}>📦</Text>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="History"
+                component={HistoryScreen}
+                options={{
+                    tabBarLabel: 'Riwayat',
+                    tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+                        <Text style={{ fontSize: size, color }}>📜</Text>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                    tabBarLabel: 'Pengaturan',
+                    tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+                        <Text style={{ fontSize: size, color }}>⚙️</Text>
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+    );
+};
+
+const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['belanjanote://', 'https://belanjanote.sipintek.com'],
+    config: {
+        screens: {
+            Main: {
+                screens: {
+                    Home: 'home',
+                    Products: 'products',
+                    History: 'history',
+                    Settings: 'settings',
+                }
+            },
+            PrivacyPolicy: 'privacy-policy',
+        },
+    },
+};
 
 export const AppNavigator: React.FC = () => {
     const { initializeApp, isLoading } = useStore();
@@ -27,67 +120,11 @@ export const AppNavigator: React.FC = () => {
     }
 
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                screenOptions={{
-                    headerShown: false,
-                    tabBarActiveTintColor: '#3B82F6',
-                    tabBarInactiveTintColor: '#9CA3AF',
-                    tabBarStyle: {
-                        backgroundColor: '#FFFFFF',
-                        borderTopWidth: 1,
-                        borderTopColor: '#E5E7EB',
-                        paddingBottom: 8,
-                        paddingTop: 8,
-                        height: 60,
-                    },
-                    tabBarLabelStyle: {
-                        fontSize: 12,
-                        fontWeight: '600',
-                    },
-                }}
-            >
-                <Tab.Screen
-                    name="Home"
-                    component={HomeScreen}
-                    options={{
-                        tabBarLabel: 'Belanja',
-                        tabBarIcon: ({ color, size }) => (
-                            <Text style={{ fontSize: size, color }}>🛒</Text>
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="Products"
-                    component={ProductsScreen}
-                    options={{
-                        tabBarLabel: 'Produk',
-                        tabBarIcon: ({ color, size }) => (
-                            <Text style={{ fontSize: size, color }}>📦</Text>
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="History"
-                    component={HistoryScreen}
-                    options={{
-                        tabBarLabel: 'Riwayat',
-                        tabBarIcon: ({ color, size }) => (
-                            <Text style={{ fontSize: size, color }}>📜</Text>
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="Settings"
-                    component={SettingsScreen}
-                    options={{
-                        tabBarLabel: 'Pengaturan',
-                        tabBarIcon: ({ color, size }) => (
-                            <Text style={{ fontSize: size, color }}>⚙️</Text>
-                        ),
-                    }}
-                />
-            </Tab.Navigator>
+        <NavigationContainer linking={linking}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Main" component={TabNavigator} />
+                <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+            </Stack.Navigator>
         </NavigationContainer>
     );
 };

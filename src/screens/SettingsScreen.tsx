@@ -6,16 +6,19 @@ import {
     ScrollView,
     TouchableOpacity,
     Image,
+    Linking,
 } from 'react-native';
 import { showAlert } from '../utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useStore } from '../store';
 import { Button, AppHeader } from '../components';
+import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
+import { useStore } from '../store';
 
 export const SettingsScreen: React.FC = () => {
     const { exportData, importData, products, purchaseHistory } = useStore();
+    const navigation = useNavigation<any>();
     const [loading, setLoading] = useState(false);
 
     const handleExport = async () => {
@@ -145,6 +148,15 @@ export const SettingsScreen: React.FC = () => {
                         </Text>
                     </View>
                 </View>
+
+                <TouchableOpacity
+                    style={styles.privacyLink}
+                    onPress={() => navigation.navigate('PrivacyPolicy')}
+                >
+                    <Text style={styles.privacyLinkText}>Kebijakan Privasi</Text>
+                </TouchableOpacity>
+
+                <View style={{ height: 40 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -251,5 +263,15 @@ const styles = StyleSheet.create({
         color: '#6B7280',
         textAlign: 'center',
         lineHeight: 20,
+    },
+    privacyLink: {
+        alignItems: 'center',
+        paddingVertical: 16,
+        marginTop: 8,
+    },
+    privacyLinkText: {
+        color: '#6B7280',
+        fontSize: 14,
+        textDecorationLine: 'underline',
     },
 });

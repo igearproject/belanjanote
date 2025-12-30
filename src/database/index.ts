@@ -1,52 +1,75 @@
 import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 import { Product, PurchaseHistory } from '../types';
 
-const DB_NAME = 'catatan_belanja.db';
+const DB_NAME = 'belanjanote_v2.db';
 
 let db: SQLite.SQLiteDatabase | null = null;
+let initPromise: Promise<void> | null = null;
 
-export const initDatabase = async (): Promise<void> => {
+const performInit = async (): Promise<void> => {
     try {
-        db = await SQLite.openDatabaseAsync(DB_NAME, {});
+        if (Platform.OS === 'web' && typeof SharedArrayBuffer === 'undefined') {
+            console.error('SharedArrayBuffer is not available. Expo SQLite requires SharedArrayBuffer on web.');
+            // We can't really proceed if SharedArrayBuffer is missing for persistent storage usually
+        }
 
-        // Create products table
-        await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS products (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        category TEXT NOT NULL,
-        defaultUnit TEXT NOT NULL,
-        packagingSize REAL NOT NULL,
-        averageLifespanDays REAL DEFAULT 0,
-        lastPurchaseDate TEXT,
-        createdAt TEXT NOT NULL
-      );
-    `);
+        console.log('Opening database:', DB_NAME);
+        db = await SQLite.openDatabaseAsync(DB_NAME);
+        console.log('Database opened');
 
-        // Create purchase_history table
-        await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS purchase_history (
-        id TEXT PRIMARY KEY,
-        productId TEXT NOT NULL,
-        date TEXT NOT NULL,
-        quantity REAL NOT NULL,
-        unit TEXT NOT NULL,
-        price REAL,
-        FOREIGN KEY (productId) REFERENCES products (id) ON DELETE CASCADE
-      );
-    `);
+        // CREATE TABLE products
+        console.log('Creating products table...');
+        await db.runAsync(`
+            CREATE TABLE IF NOT EXISTS products (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                category TEXT NOT NULL,
+                defaultUnit TEXT NOT NULL,
+                packagingSize REAL NOT NULL,
+                averageLifespanDays REAL DEFAULT 0,
+                lastPurchaseDate TEXT,
+                createdAt TEXT NOT NULL
+            );
+        `);
+        console.log('Products table created or already exists');
 
-        // Create index for faster queries
-        await db.execAsync(`
-      CREATE INDEX IF NOT EXISTS idx_purchase_product_date 
-      ON purchase_history (productId, date DESC);
-    `);
+        // CREATE TABLE purchase_history
+        console.log('Creating purchase_history table...');
+        await db.runAsync(`
+            CREATE TABLE IF NOT EXISTS purchase_history (
+                id TEXT PRIMARY KEY,
+                productId TEXT NOT NULL,
+                date TEXT NOT NULL,
+                quantity REAL NOT NULL,
+                unit TEXT NOT NULL,
+                price REAL,
+                FOREIGN KEY (productId) REFERENCES products (id) ON DELETE CASCADE
+            );
+        `);
+        console.log('Purchase history table created or already exists');
+
+        // CREATE INDEX
+        console.log('Creating index...');
+        await db.runAsync(`
+            CREATE INDEX IF NOT EXISTS idx_purchase_product_date 
+            ON purchase_history (productId, date DESC);
+        `);
+        console.log('Index created or already exists');
 
         console.log('Database initialized successfully');
     } catch (error) {
+        initPromise = null;
         console.error('Error initializing database:', error);
         throw error;
     }
+};
+
+export const initDatabase = async (): Promise<void> => {
+    if (!initPromise) {
+        initPromise = performInit();
+    }
+    return initPromise;
 };
 
 export const getDatabase = (): SQLite.SQLiteDatabase => {
